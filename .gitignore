@@ -90,7 +90,7 @@ addons/*/__pycache__/
 # Env files
 .env
 .env.*
-.venv/
+
 
 # VS Code
 .vscode/
