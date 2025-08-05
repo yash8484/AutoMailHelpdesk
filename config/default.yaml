@@ -1,0 +1,182 @@
+# Default configuration for AutoMailHelpdesk
+
+# Application settings
+app:
+  name: "AutoMailHelpdesk"
+  version: "1.0.0"
+  debug: false
+  host: "0.0.0.0"
+  port: 8000
+  workers: 4
+
+# Database configuration
+database:
+  url: "${DATABASE_URL}"
+  pool_size: 10
+  max_overflow: 20
+  pool_timeout: 30
+  pool_recycle: 3600
+
+# Redis configuration
+redis:
+  url: "${REDIS_URL}"
+  max_connections: 10
+  retry_on_timeout: true
+
+# Gmail API configuration
+gmail:
+  client_id: "${GMAIL_CLIENT_ID}"
+  client_secret: "${GMAIL_CLIENT_SECRET}"
+  refresh_token: "${GMAIL_REFRESH_TOKEN}"
+  access_token: "${GMAIL_ACCESS_TOKEN}"
+  rate_limit: 250  # requests per 100 seconds
+  poll_interval: 300  # seconds
+  max_results: 50
+
+# Odoo configuration
+odoo:
+  url: "${ODOO_URL}"
+  database: "${ODOO_DATABASE}"
+  username: "${ODOO_USERNAME}"
+  password: "${ODOO_PASSWORD}"
+  timeout: 30
+
+# Google AI configuration
+google_ai:
+  api_key: "${GOOGLE_API_KEY}"
+  project_id: "${GOOGLE_PROJECT_ID}"
+  rate_limit: 60  # requests per minute
+  temperature: 0.1
+  max_tokens: 1024
+
+# Langchain configuration
+langchain:
+  tracing: true
+  endpoint: "${LANGCHAIN_ENDPOINT}"
+  api_key: "${LANGCHAIN_API_KEY}"
+  project: "${LANGCHAIN_PROJECT}"
+
+# ChromaDB configuration
+chromadb:
+  host: "${CHROMADB_HOST}"
+  port: ${CHROMADB_PORT}
+  collection_name: "${CHROMADB_COLLECTION_NAME}"
+  timeout: 30
+
+# Monitoring configuration
+monitoring:
+  sentry_dsn: "${SENTRY_DSN}"
+  datadog_api_key: "${DATADOG_API_KEY}"
+  log_level: "INFO"
+  enable_metrics: true
+
+# Slack configuration
+slack:
+  webhook_url: "${SLACK_WEBHOOK_URL}"
+  channel: "${SLACK_CHANNEL}"
+  username: "AutoMailHelpdesk"
+  icon_emoji: ":robot_face:"
+
+# Processing configuration
+processing:
+  max_retries: 3
+  retry_delay: 60  # seconds
+  circuit_breaker:
+    failure_threshold: 5
+    recovery_timeout: 60
+  batch_size: 10
+  timeout: 300
+
+# Security configuration
+security:
+  secret_key: "${SECRET_KEY}"
+  jwt_algorithm: "HS256"
+  access_token_expire_minutes: 30
+  cors_origins:
+    - "http://localhost:3000"
+    - "https://yourdomain.com"
+
+# Email processing configuration
+email:
+  deduplication_window: 3600  # seconds
+  max_attachment_size: 10485760  # 10MB
+  allowed_attachment_types:
+    - "pdf"
+    - "doc"
+    - "docx"
+    - "txt"
+    - "jpg"
+    - "jpeg"
+    - "png"
+
+# Intent classification configuration
+intent:
+  confidence_threshold: 0.7
+  fallback_intent: "fallback_human"
+  intents:
+    bank_statement:
+      priority: "low"
+      team_id: 3
+      tags: [1]
+    password_update:
+      priority: "medium"
+      team_id: 2
+      tags: [2]
+    general_query:
+      priority: "low"
+      team_id: 4
+      tags: [3]
+    urgent_human:
+      priority: "high"
+      team_id: 1
+      tags: [4]
+    fallback_human:
+      priority: "medium"
+      team_id: 1
+      tags: [5]
+
+# RAG configuration
+rag:
+  max_context_length: 2000
+  similarity_threshold: 0.8
+  max_results: 5
+  chunk_size: 1000
+  chunk_overlap: 200
+
+# PDF generation configuration
+pdf:
+  output_directory: "/tmp"
+  font_size: 10
+  page_size: "A4"
+  margins:
+    top: 72
+    bottom: 18
+    left: 72
+    right: 72
+
+# Celery configuration
+celery:
+  broker_url: "${REDIS_URL}"
+  result_backend: "${REDIS_URL}"
+  task_serializer: "json"
+  accept_content: ["json"]
+  result_serializer: "json"
+  timezone: "UTC"
+  enable_utc: true
+  task_routes:
+    "email_processor.process_email_task": "email_processing"
+    "email_processor.process_intent_task": "intent_processing"
+  worker_prefetch_multiplier: 1
+  task_acks_late: true
+  worker_max_tasks_per_child: 1000
+
+# Health check configuration
+health:
+  timeout: 5
+  checks:
+    - database
+    - redis
+    - gmail_api
+    - odoo_api
+    - chromadb
+

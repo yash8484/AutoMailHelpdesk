@@ -1,0 +1,272 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: automailhelpdesk-app
+  labels:
+    app: automailhelpdesk
+    component: app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: automailhelpdesk
+      component: app
+  template:
+    metadata:
+      labels:
+        app: automailhelpdesk
+        component: app
+    spec:
+      containers:
+      - name: app
+        image: ghcr.io/your-org/automailhelpdesk:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: redis-url
+        - name: GMAIL_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: gmail-client-id
+        - name: GMAIL_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: gmail-client-secret
+        - name: GMAIL_REFRESH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: gmail-refresh-token
+        - name: GMAIL_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: gmail-access-token
+        - name: ODOO_URL
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: odoo-url
+        - name: ODOO_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: odoo-database
+        - name: ODOO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: odoo-username
+        - name: ODOO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: odoo-password
+        - name: GOOGLE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: google-api-key
+        - name: GOOGLE_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: google-project-id
+        - name: LANGCHAIN_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: langchain-api-key
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: secret-key
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: sentry-dsn
+              optional: true
+        - name: SLACK_WEBHOOK_URL
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: slack-webhook-url
+              optional: true
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: config
+          mountPath: /app/config
+          readOnly: true
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: config
+        configMap:
+          name: automailhelpdesk-config
+      - name: logs
+        emptyDir: {}
+      restartPolicy: Always
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: automailhelpdesk-worker
+  labels:
+    app: automailhelpdesk
+    component: worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: automailhelpdesk
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: automailhelpdesk
+        component: worker
+    spec:
+      containers:
+      - name: worker
+        image: ghcr.io/your-org/automailhelpdesk:latest
+        command: ["celery", "-A", "src.workers.email_processor.celery_app", "worker", "--loglevel=info"]
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: database-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: redis-url
+        - name: GMAIL_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: gmail-client-id
+        - name: GMAIL_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: gmail-client-secret
+        - name: GMAIL_REFRESH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: gmail-refresh-token
+        - name: GMAIL_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: gmail-access-token
+        - name: ODOO_URL
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: odoo-url
+        - name: ODOO_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: odoo-database
+        - name: ODOO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: odoo-username
+        - name: ODOO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: odoo-password
+        - name: GOOGLE_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: google-api-key
+        - name: GOOGLE_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: google-project-id
+        - name: LANGCHAIN_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: langchain-api-key
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: secret-key
+        - name: SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: sentry-dsn
+              optional: true
+        - name: SLACK_WEBHOOK_URL
+          valueFrom:
+            secretKeyRef:
+              name: automailhelpdesk-secrets
+              key: slack-webhook-url
+              optional: true
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "250m"
+        volumeMounts:
+        - name: config
+          mountPath: /app/config
+          readOnly: true
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: config
+        configMap:
+          name: automailhelpdesk-config
+      - name: logs
+        emptyDir: {}
+      restartPolicy: Always
+

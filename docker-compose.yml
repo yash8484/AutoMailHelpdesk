@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+      - ./config:/app/config
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+      - chromadb
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --workers 1
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app/src
+      - ./config:/app/config
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+    command: celery -A src.workers.email_processor.celery_app worker --loglevel=info
+  db:
+    image: mysql:8.0
+    volumes:
+      - mysql_data:/var/lib/mysql
+    env_file:
+      - ./.env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-automailhelpdesk}
+      MYSQL_USER: ${MYSQL_USER:-user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql_data:s:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - chromadb_data:/app/chroma/data
+
+volumes:
+  postgres_data:
+  redis_data:
+  chromadb_data:
+
+

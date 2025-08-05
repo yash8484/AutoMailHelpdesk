@@ -1,0 +1,131 @@
+# → Official Python template (GitHub)
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+.venv*/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff
+*.log
+
+# Flask stuff
+instance/
+.webassets-cache
+
+# Scrapy stuff
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# celerybeat schedule file
+celerybeat-schedule
+celerybeat.pid
+
+# Odoo *.pyc + addons
+*.pyc
+addons/*/__pycache__/
+
+# Env files
+.env
+.env.*
+.venv/
+
+# VS Code
+.vscode/
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Docker
+docker-compose.override.yml
+docker-compose.*.yml
+*.dockerfile
+
+# Kubernetes / Helm
+*.tgz
+charts/*.tgz
+# local kubeconfig
+.kube/
+
+# Logs
+logs/
+*.log
+
+# SQLite
+*.sqlite3
+
+# Cursor AI / Editor temp
+cursor.log
+*.cursorcache
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db

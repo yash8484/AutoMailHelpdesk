@@ -1,0 +1,247 @@
+# Default values for AutoMailHelpdesk Helm chart
+
+# Global settings
+global:
+  imageRegistry: ghcr.io
+  imagePullSecrets: []
+
+# Application configuration
+app:
+  name: automailhelpdesk
+  image:
+    repository: your-org/automailhelpdesk
+    tag: latest
+    pullPolicy: IfNotPresent
+  
+  replicaCount: 3
+  
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "250m"
+    limits:
+      memory: "1Gi"
+      cpu: "500m"
+  
+  # Horizontal Pod Autoscaler
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  
+  # Pod Disruption Budget
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+  
+  # Probes
+  livenessProbe:
+    httpGet:
+      path: /healthz
+      port: 8000
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+  
+  readinessProbe:
+    httpGet:
+      path: /readyz
+      port: 8000
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 3
+
+# Worker configuration
+worker:
+  replicaCount: 2
+  
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "250m"
+  
+  # Horizontal Pod Autoscaler for workers
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+    # Custom metrics for queue length
+    customMetrics:
+      - type: Pods
+        pods:
+          metric:
+            name: celery_queue_length
+          target:
+            type: AverageValue
+            averageValue: "10"
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+  hosts:
+    - host: automailhelpdesk.yourdomain.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: automailhelpdesk-tls
+      hosts:
+        - automailhelpdesk.yourdomain.com
+
+# Database configuration (if using external database)
+database:
+  external: true
+  host: postgres.yourdomain.com
+  port: 5432
+  name: automailhelpdesk
+  # Credentials should be provided via secrets
+
+# Redis configuration (if using external Redis)
+redis:
+  external: true
+  host: redis.yourdomain.com
+  port: 6379
+  # Credentials should be provided via secrets
+
+# ChromaDB configuration
+chromadb:
+  external: false
+  host: chromadb-service
+  port: 8000
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: standard
+
+# Monitoring and observability
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    path: /metrics
+  
+  # Grafana dashboard
+  grafana:
+    enabled: true
+    dashboardsConfigMap: automailhelpdesk-dashboards
+
+# Logging
+logging:
+  level: INFO
+  structured: true
+  
+  # Log aggregation (e.g., Fluentd, Fluent Bit)
+  aggregation:
+    enabled: false
+    agent: fluentd
+
+# Security
+security:
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 1000
+  
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+
+# Network policies
+networkPolicy:
+  enabled: true
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+  egress:
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443  # HTTPS
+        - protocol: TCP
+          port: 80   # HTTP
+        - protocol: TCP
+          port: 5432 # PostgreSQL
+        - protocol: TCP
+          port: 6379 # Redis
+
+# Backup configuration
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Daily at 2 AM
+  retention: 30  # days
+  storage:
+    type: s3
+    bucket: automailhelpdesk-backups
+    region: us-east-1
+
+# Environment-specific overrides
+environments:
+  development:
+    app:
+      replicaCount: 1
+      resources:
+        requests:
+          memory: "256Mi"
+          cpu: "100m"
+        limits:
+          memory: "512Mi"
+          cpu: "200m"
+    worker:
+      replicaCount: 1
+    autoscaling:
+      enabled: false
+    monitoring:
+      enabled: false
+  
+  staging:
+    app:
+      replicaCount: 2
+    worker:
+      replicaCount: 1
+    ingress:
+      hosts:
+        - host: staging-automailhelpdesk.yourdomain.com
+          paths:
+            - path: /
+              pathType: Prefix
+  
+  production:
+    app:
+      replicaCount: 5
+    worker:
+      replicaCount: 3
+    autoscaling:
+      enabled: true
+      maxReplicas: 20
+    backup:
+      enabled: true
+      retention: 90
+
