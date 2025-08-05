@@ -94,24 +94,24 @@ def process_email_task(self, message_data: Optional[str], message_id: Optional[s
             ticket_memory.update_conversation(ticket_id, parsed_email, intent_result)
             
             # TODO: Process based on intent
-            response = await process_intent(
+            response = asyncio.run(process_intent(
                 intent_result,
                 parsed_email,
                 ticket_id,
                 llm_engine,
                 rag_store,
                 escalation_handler
-            )
+            ))
             
             # TODO: Create Gmail draft
             if response:
-                email_drafts.create_draft(
-                    to=parsed_email["sender"],
+                asyncio.run(email_drafts.create_draft(
+                    to_email=parsed_email["sender"],
                     subject=f"Re: {parsed_email['subject']}",
                     body=response["body"],
-                    attachments=response.get("attachments", []),
-                    ticket_id=ticket_id
-                )
+                    ticket_id=ticket_id,
+                    metadata={"attachments": response.get("attachments", [])}
+                ))
             
             # TODO: Mark email as processed
             gmail_client.mark_email_processed(email["id"])

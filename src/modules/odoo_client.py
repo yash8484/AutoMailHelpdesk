@@ -62,7 +62,6 @@ class OdooClient:
         Create a new helpdesk ticket in Odoo.
         """
         try:
-            async with self.circuit_breaker:
                 # TODO: Map email data to Odoo helpdesk ticket fields
                 ticket_data = {
                     'name': parsed_email['subject'],
@@ -98,7 +97,6 @@ class OdooClient:
         Append new message to existing ticket.
         """
         try:
-            async with self.circuit_breaker:
                 # TODO: Add message to ticket
                 message_data = {
                     'res_id': int(ticket_id),
@@ -141,7 +139,6 @@ class OdooClient:
         Get the last known intent for a ticket.
         """
         try:
-            async with self.circuit_breaker:
                 tickets = self.models.execute_kw(
                     self.database, self.uid, self.password,
                     'helpdesk.ticket', 'read',
