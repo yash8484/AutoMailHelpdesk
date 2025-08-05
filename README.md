@@ -31,5 +31,3 @@ Build a **fully-automated**, production-grade email-to-ticket helpdesk assistant
 ## Production Deployment via Helm
 
 ## Running Tests and Generating Coverage Reports
-
-
