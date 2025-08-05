@@ -6,20 +6,25 @@ gunicorn==21.2.0
 # Async HTTP
 aiohttp==3.9.1
 
-
 # Database & ORM
 sqlalchemy==2.0.23
 alembic==1.13.0
-
 aiomysql==0.2.0
 
 # Task Queue
 celery==5.3.4
+redis==5.0.1
+
+# Gmail API
+google-auth==2.23.4
+google-auth-oauthlib==1.1.0
+google-auth-httplib2==0.1.1
+google-api-python-client==2.108.0
+
 # Langchain & LLM
 langchain==0.0.352
 langchain-google-genai==0.0.6
 langsmith==0.0.70
-
 
 # Vector Store
 chromadb==0.4.18
@@ -55,7 +60,6 @@ black==23.11.0
 flake8==6.1.0
 mypy==1.7.1
 isort==5.12.0
-
 pre-commit==3.6.0
 
 # Utilities

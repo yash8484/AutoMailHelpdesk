@@ -1,4 +1,5 @@
-from pydantic import BaseSettings
+from pydantic import BaseModel, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 import os
 
@@ -64,9 +65,7 @@ class Settings(BaseSettings):
     GMAIL_API_RATE_LIMIT: int = 250  # requests per 100 seconds
     GEMINI_API_RATE_LIMIT: int = 60  # requests per minute
     
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 
 
 settings = Settings()
