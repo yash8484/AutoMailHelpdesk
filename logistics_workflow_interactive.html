@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Platform Workflow - Interactive Flowchart</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin-bottom: 40px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .section h2 {
+            color: #555;
+            margin-top: 0;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+        .mermaid {
+            text-align: center;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid #333;
+        }
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            background-color: white;
+            border-color: #e0e0e0;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .workflow-description {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .stage-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .stage-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            background-color: #fafafa;
+        }
+        .stage-card h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Logistics Platform Workflow - Comprehensive Overview</h1>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e1f5fe;"></div>
+                <span>Client/User Actions</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #f3e5f5;"></div>
+                <span>Service Operations</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #e8f5e9;"></div>
+                <span>Logistics Operations</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #fff3e0;"></div>
+                <span>AI/ML Components</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #ffebee;"></div>
+                <span>Alerts & Notifications</span>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('overview')">Overview</div>
+            <div class="tab" onclick="showTab('ai-control')">AI Control Tower</div>
+            <div class="tab" onclick="showTab('microservices')">Microservices</div>
+            <div class="tab" onclick="showTab('exceptions')">Exception Handling</div>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <div class="section">
+                <h2>High-Level Logistics Workflow</h2>
+                <div class="workflow-description">
+                    This workflow represents the complete journey of a shipment from booking to delivery, including all major touchpoints and decision points.
+                </div>
+                <div class="mermaid">
+                    graph TB
+                        classDef clientStyle fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+                        classDef serviceStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+                        classDef operationStyle fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+                        
+                        A[Client Books Shipment]:::clientStyle
+                        B{Service Type & Load Details}:::serviceStyle
+                        C{Dynamic Pricing & Quoting}:::serviceStyle
+                        D[Payment & AWB Generation]:::serviceStyle
+                        E[Carrier Allocation<br/>Self/Vendor/Franchise]:::operationStyle
+                        F[First Mile Pickup]:::operationStyle
+                        G[Middle Mile Transit]:::operationStyle
+                        H[Last Mile Delivery]:::operationStyle
+                        I[Proof of Delivery - POD]:::operationStyle
+                        J[Billing & Settlement]:::serviceStyle
+                        K[Shipment Completed]:::clientStyle
+                        
+                        A --> B
+                        B --> C
+                        C --> D
+                        D --> E
+                        E --> F
+                        F --> G
+                        G --> H
+                        H --> I
+                        I --> J
+                        J --> K
+                </div>
+                
+                <div class="stage-details">
+                    <div class="stage-card">
+                        <h3>1. Booking & Order Creation</h3>
+                        <ul>
+                            <li>Client provides shipment details</li>
+                            <li>Load type, dimensions, origin, destination</li>
+                            <li>Service level selection</li>
+                            <li>Real-time validation</li>
+                        </ul>
+                    </div>
+                    <div class="stage-card">
+                        <h3>2. Pricing & Payment</h3>
+                        <ul>
+                            <li>Dynamic pricing calculation</li>
+                            <li>Distance, weight, service type factors</li>
+                            <li>Instant quote generation</li>
+                            <li>Secure payment processing</li>
+                        </ul>
+                    </div>
+                    <div class="stage-card">
+                        <h3>3. Carrier Allocation</h3>
+                        <ul>
+                            <li>AI-driven carrier selection</li>
+                            <li>Self-fleet vs vendor vs franchise</li>
+                            <li>Route optimization</li>
+                            <li>Capacity matching</li>
+                        </ul>
+                    </div>
+                    <div class="stage-card">
+                        <h3>4. First Mile Operations</h3>
+                        <ul>
+                            <li>Pickup scheduling</li>
+                            <li>Driver assignment</li>
+                            <li>QR code generation</li>
+                            <li>GPS tracking activation</li>
+                        </ul>
+                    </div>
+                    <div class="stage-card">
+                        <h3>5. Middle Mile Transit</h3>
+                        <ul>
+                            <li>Hub operations</li>
+                            <li>Inter-city transportation</li>
+                            <li>Load consolidation</li>
+                            <li>Transit monitoring</li>
+                        </ul>
+                    </div>
+                    <div class="stage-card">
+                        <h3>6. Last Mile & Completion</h3>
+                        <ul>
+                            <li>Final delivery routing</li>
+                            <li>Customer notifications</li>
+                            <li>POD capture</li>
+                            <li>Billing & settlement</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="ai-control" class="tab-content">
+            <div class="section">
+                <h2>AI-Native Control Tower Workflow</h2>
+                <div class="workflow-description">
+                    The AI Control Tower provides real-time monitoring, anomaly detection, and predictive analytics throughout the entire shipment journey.
+                </div>
+                <div class="mermaid">
+                    graph TB
+                        classDef aiStyle fill:#fff3e0,stroke:#e65100,stroke-width:2px
+                        classDef dataStyle fill:#f5f5f5,stroke:#424242,stroke-width:2px
+                        classDef alertStyle fill:#ffebee,stroke:#b71c1c,stroke-width:2px
+                        
+                        A[All Microservices Data Feeds]:::dataStyle
+                        B{Data Ingestion & Processing}:::aiStyle
+                        C[Centralized Data Lake]:::dataStyle
+                        D{AI/ML Anomaly Detection}:::aiStyle
+                        E{Predictive Analytics}:::aiStyle
+                        F{Optimization Engine}:::aiStyle
+                        G[Alerting Engine]:::alertStyle
+                        H[Operations Dashboard]:::alertStyle
+                        I[Feedback Loop]:::aiStyle
+                        J[Process Adjustments]:::aiStyle
+                        K[Enhanced Efficiency]:::aiStyle
+                        
+                        A --> B
+                        B --> C
+                        C --> D
+                        C --> E
+                        C --> F
+                        D -->|Anomalies| G
+                        E -->|Predictions| G
+                        F -->|Recommendations| J
+                        G -->|Alerts| H
+                        H -->|Actions| I
+                        I -->|Model Updates| D
+                        I -->|Model Updates| E
+                        I -->|Model Updates| F
+                        J --> K
+                </div>
+                
+                <div class="stage-details">
+                    <div class="stage-card">
+                        <h3>Data Collection</h3>
+                        <ul>
+                            <li>Real-time GPS tracking</li>
+                            <li>QR code scan events</li>
+                            <li>Status updates from all touchpoints</li>
+                            <li>IoT sensor data</li>
+                        </ul>
+                    </div>
+                    <div class="stage-card">
+                        <h3>AI/ML Models</h3>
+                        <ul>
+                            <li>Anomaly detection algorithms</li>
+                            <li>Delay prediction models</li>
+                            <li>Route optimization engine</li>
+                            <li>Demand forecasting</li>
+                        </ul>
+                    </div>
+                    <div class="stage-card">
+                        <h3>Automated Actions</h3>
+                        <ul>
+                            <li>Proactive customer notifications</li>
+                            <li>Auto-rerouting capabilities</li>
+                            <li>Dynamic carrier reallocation</li>
+                            <li>Performance optimization</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="microservices" class="tab-content">
+            <div class="section">
+                <h2>Microservices Architecture & Interaction</h2>
+                <div class="workflow-description">
+                    This diagram shows how different microservices interact throughout the shipment lifecycle, enabling modular and scalable operations.
+                </div>
+                <div class="mermaid">
+                    graph TB
+                        classDef clientStyle fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+                        classDef serviceStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+                        classDef operationStyle fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+                        classDef dataStyle fill:#f5f5f5,stroke:#424242,stroke-width:2px
+                        
+                        MS1[Client Portal]:::clientStyle
+                        MS2[Order Management]:::serviceStyle
+                        MS3[Pricing Service]:::serviceStyle
+                        MS4[Payment Service]:::serviceStyle
+                        MS5[Carrier Allocation]:::operationStyle
+                        MS6[First Mile Service]:::operationStyle
+                        MS7[Middle Mile Service]:::operationStyle
+                        MS8[Last Mile Service]:::operationStyle
+                        MS9[Tracking Service]:::dataStyle
+                        MS10[POD Service]:::operationStyle
+                        MS11[Billing Service]:::serviceStyle
+                        
+                        MS1 -->|Create Order| MS2
+                        MS2 -->|Get Quote| MS3
+                        MS3 -->|Return Quote| MS2
+                        MS2 -->|Process Payment| MS4
+                        MS4 -->|Confirm| MS5
+                        MS5 -->|Assign| MS6
+                        MS6 -->|Updates| MS9
+                        MS6 -->|Complete| MS7
+                        MS7 -->|Updates| MS9
+                        MS7 -->|Complete| MS8
+                        MS8 -->|Updates| MS9
+                        MS8 -->|Complete| MS10
+                        MS10 -->|Confirm| MS11
+                        MS9 -->|Status| MS1
+                </div>
+            </div>
+        </div>
+
+        <div id="exceptions" class="tab-content">
+            <div class="section">
+                <h2>Exception Handling Workflow</h2>
+                <div class="workflow-description">
+                    Comprehensive exception handling ensures smooth operations even when unexpected events occur during shipment processing.
+                </div>
+                <div class="mermaid">
+                    graph TD
+                        classDef alertStyle fill:#ffebee,stroke:#b71c1c,stroke-width:2px
+                        classDef actionStyle fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+                        
+                        EX1[Exception Detected]:::alertStyle
+                        EX2{Exception Type}
+                        EX3[Delay Exception]:::alertStyle
+                        EX4[Route Deviation]:::alertStyle
+                        EX5[Damage/Loss]:::alertStyle
+                        EX6[Capacity Issue]:::alertStyle
+                        
+                        ACT1[Auto-reroute]:::actionStyle
+                        ACT2[Customer Notification]:::actionStyle
+                        ACT3[Escalation to Ops]:::actionStyle
+                        ACT4[Insurance Process]:::actionStyle
+                        ACT5[Alternative Carrier]:::actionStyle
+                        
+                        EX1 --> EX2
+                        EX2 -->|Delay| EX3
+                        EX2 -->|Route| EX4
+                        EX2 -->|Damage| EX5
+                        EX2 -->|Capacity| EX6
+                        
+                        EX3 --> ACT2
+                        EX3 --> ACT3
+                        EX4 --> ACT1
+                        EX4 --> ACT2
+                        EX5 --> ACT4
+                        EX5 --> ACT3
+                        EX6 --> ACT5
+                        EX6 --> ACT3
+                </div>
+                
+                <div class="stage-details">
+                    <div class="stage-card">
+                        <h3>Common Exceptions</h3>
+                        <ul>
+                            <li>Delivery delays</li>
+                            <li>Route deviations</li>
+                            <li>Capacity constraints</li>
+                            <li>Weather disruptions</li>
+                            <li>Vehicle breakdowns</li>
+                        </ul>
+                    </div>
+                    <div class="stage-card">
+                        <h3>Automated Responses</h3>
+                        <ul>
+                            <li>Intelligent rerouting</li>
+                            <li>Proactive notifications</li>
+                            <li>Carrier reallocation</li>
+                            <li>Priority escalation</li>
+                            <li>Recovery planning</li>
+                        </ul>
+                    </div>
+                    <div class="stage-card">
+                        <h3>Resolution Tracking</h3>
+                        <ul>
+                            <li>Exception monitoring</li>
+                            <li>Resolution timeline</li>
+                            <li>Performance impact</li>
+                            <li>Customer satisfaction</li>
+                            <li>Continuous improvement</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+
+        // Tab switching function
+        function showTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Re-render Mermaid diagrams in the active tab
+            mermaid.init();
+        }
+    </script>
+</body>
+</html>
